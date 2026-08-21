@@ -1,96 +1,112 @@
 # Food2Chemical
 
-This repository contains the code, model inputs, source data, and numerical results supporting the revised Food2Chemical study on system-level allocation of underutilized food resources to competing platform-chemical production pathways.
+This repository contains the revised, reproducible analysis code and the input
+data required for the Food2Chemical manuscript. It does not version complete
+numerical result archives or generated figure files. Those outputs are intended
+to be distributed separately with the manuscript as supplementary data.
 
-## Repository status
+## Study design
 
-The repository is being reorganized for the revised manuscript. Files corresponding to the original submission have been preserved in `archive/original_submission/`. Revised code, data, and results should be placed in the structured directories described below.
+The analysis covers mainland China (CN), the United States (US), and the
+European Union (EU-27). Two feedstock scopes are evaluated:
 
-## Study scope
+- **FL**: food-loss streams only.
+- **FLB**: food-loss and food-by-product streams.
 
-The analysis considers three regions:
+For every region and feedstock scope, the model evaluates two objectives:
 
-- China mainland
-- United States
-- European Union (EU-27)
+- maximize global warming potential (GWP) saving;
+- maximize potential economic margin.
 
-Two resource scenarios are evaluated:
-
-- Food loss (FL)
-- Food loss and by-products (FLB)
-
-The optimization is performed under two alternative decision objectives:
-
-- maximize global warming potential (GWP) saving
-- maximize potential economic margin
-
-The revised analysis also includes Monte Carlo uncertainty analysis.
+The uncertainty workflow uses Latin hypercube Monte Carlo sampling. The revised
+manuscript results were generated with 5,000 iterations per region/scope and a
+random seed of 42.
 
 ## Repository structure
 
 ```text
-Food2Chemical/
-├── README.md
-├── VERSION_NOTES.md
-├── archive/
-│   └── original_submission/    # Files from the original repository
-├── code/
-│   ├── optimization/           # Revised optimization model
-│   ├── monte_carlo/            # Monte Carlo uncertainty analysis
-│   └── visualization/          # Scripts used to generate data-driven figures
-├── data/
-│   ├── model_inputs/
-│   │   ├── FL/                 # Model inputs for the FL scenario
-│   │   └── FLB/                # Model inputs for the FLB scenario
-│   ├── monte_carlo_inputs/     # Uncertainty-analysis inputs
-│   └── source_data/            # Source/processed data underlying model inputs
-├── results/
-│   ├── optimization/
-│   │   ├── FL/
-│   │   └── FLB/
-│   ├── monte_carlo/
-│   │   ├── FL/
-│   │   └── FLB/
-│   └── figure_source_data/     # Numerical data underlying manuscript figures
-└── figures/
-    ├── main/
-    └── supplementary/
+archive/original_submission/   Frozen original-submission files
+code/optimization/             Deterministic Pyomo optimization
+code/monte_carlo/              Monte Carlo uncertainty analysis
+code/visualization/            Figure-generation code
+data/model_inputs/FL/          Deterministic FL inputs
+data/model_inputs/FLB/         Deterministic FLB inputs
+data/monte_carlo_inputs/       Uncertainty parameter workbooks
+figures/input_data/            Compact numerical inputs required by plots
+figures/main/                  Generated main figures; ignored by Git
+figures/supplementary/         Generated supplementary figures; ignored by Git
+outputs/                       Generated numerical outputs; ignored by Git
 ```
+
+`archive/original_submission/` is a frozen provenance copy and must not be
+modified when updating the revised workflow.
+
+## Installation
+
+Python 3.11 was used for the revised analysis. Install the Python dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+The optimization also requires a linear-programming solver supported by Pyomo.
+The default configuration uses GLPK and resolves `glpsol` from the system
+`PATH`. A solver executable can be supplied explicitly through the command-line
+option used by the Monte Carlo workflow or in `batch_config.json`.
+
+## Run the deterministic optimization
+
+From the repository root:
+
+```bash
+python -m code.optimization.batch_optimize
+```
+
+The configuration reads all six input workbooks and writes combined result and
+analysis workbooks under `outputs/optimization/`. These generated workbooks are
+not committed to Git.
+
+## Run the Monte Carlo analysis
+
+```bash
+python -m code.monte_carlo.batch_optimize_monte_carlo \
+  --iterations 5000 \
+  --seed 42
+```
+
+Use `--only CN_FLB` (or another region/scope code) to run one independent
+scenario. Generated files are written under `outputs/monte_carlo/` and are not
+committed to Git.
+
+## Regenerate figures
+
+Compact plotting inputs are stored in `figures/input_data/`. Examples:
+
+```bash
+python -m code.visualization.allocation_chord
+python -m code.visualization.plot_fl_ch_heatmap_bubbles --scenario FL
+python -m code.visualization.plot_fl_ch_heatmap_bubbles --scenario FLB
+python -m code.visualization.plot_fl_availability_pc_demand
+python -m code.visualization.plot_optimization_analysis
+python -m code.visualization.plot_mc_uncertainty_results
+```
+
+The sunburst visualization is provided as
+`code/visualization/sunburst_ch3_quantification.ipynb`. Generated PNG, PDF, and
+SVG files are written beneath `figures/` and are intentionally ignored by Git.
 
 ## Reproducibility workflow
 
-The intended data and analysis workflow is:
-
 ```text
-source data
-    ↓
 model inputs
-    ↓
-optimization / Monte Carlo analysis
-    ↓
-result tables
-    ↓
-figure source data
-    ↓
-plotting scripts
-    ↓
-manuscript figures
+    -> deterministic optimization
+    -> Monte Carlo analysis
+    -> supplementary result tables
+    -> compact plotting input data
+    -> plotting code
+    -> manuscript figures
 ```
 
-Revised scripts should use repository-relative paths rather than user-specific absolute paths so that the workflow can be reproduced after cloning or downloading the repository.
-
-## Original submission
-
-The original repository contents are preserved under:
-
-`archive/original_submission/`
-
-These files are retained for transparency and provenance. They correspond to an earlier version of the analysis and may contain paths or assumptions that are no longer used in the revised manuscript.
-
-## Software environment
-
-A finalized `requirements.txt` and solver instructions should be added after the revised analysis scripts are placed in the repository. The optimization workflow should document the Python version, required Python packages, solver and solver version, and any random seed/settings used for Monte Carlo analysis.
-
-## Data and code availability
-
-The final repository should contain the model inputs and outputs necessary to reproduce the results reported in the revised manuscript. Third-party datasets or reports that cannot legally be redistributed should be cited and linked rather than uploaded in full.
+The model inputs and plotting input data in this repository are sufficient to
+inspect the revised model and regenerate the plotted figures. Complete numerical
+results should be obtained from the manuscript supplementary-data package.

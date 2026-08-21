@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+~$*
+*.log
+
+# Generated numerical outputs are distributed separately as supplementary data.
+outputs/
+
+# Figures are regenerated locally and are not versioned.
+figures/main/*
+!figures/main/.gitkeep
+figures/supplementary/*
+!figures/supplementary/.gitkeep

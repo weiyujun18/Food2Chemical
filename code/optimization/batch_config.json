@@ -1,0 +1,47 @@
+{
+  "output_file": "../../outputs/optimization/optimization_results.xlsx",
+  "analysis_output_file": "../../outputs/optimization/optimization_analysis.xlsx",
+  "solver": {
+    "name": "glpk",
+    "executable": null
+  },
+  "objectives": ["Env", "Eco"],
+  "datasets": [
+    {
+      "region": "CN",
+      "input_tag": "FLB",
+      "file": "../../data/model_inputs/FLB/FL2CH_CN.xlsx",
+      "sheets": {"eta": "eta", "FL": "FL", "CH": "CH", "profit": "profit", "GWP": "GWP"}
+    },
+    {
+      "region": "EU",
+      "input_tag": "FLB",
+      "file": "../../data/model_inputs/FLB/FL2CH_EU.xlsx",
+      "sheets": {"eta": "eta", "FL": "FL", "CH": "CH", "profit": "profit", "GWP": "GWP"}
+    },
+    {
+      "region": "US",
+      "input_tag": "FLB",
+      "file": "../../data/model_inputs/FLB/FL2CH_US.xlsx",
+      "sheets": {"eta": "eta", "FL": "FL", "CH": "CH", "profit": "profit", "GWP": "GWP"}
+    },
+    {
+      "region": "CN",
+      "input_tag": "FL", 
+      "file": "../../data/model_inputs/FL/FL2CH_CN_FL.xlsx",
+      "enabled": true
+    },
+    {
+      "region": "EU",
+      "input_tag": "FL",
+      "file": "../../data/model_inputs/FL/FL2CH_EU_FL.xlsx",
+      "enabled": true
+    },
+    {
+      "region": "US",
+      "input_tag": "FL",
+      "file": "../../data/model_inputs/FL/FL2CH_US_FL.xlsx",
+      "enabled": true
+    }
+  ]
+}
