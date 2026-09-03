@@ -41,6 +41,16 @@ outputs/                       Generated numerical outputs; ignored by Git
 `archive/original_submission/` is a frozen provenance copy and must not be
 modified when updating the revised workflow.
 
+## System requirements and tested environment
+
+The revised analysis was developed and tested on Windows 11 using Python 3.11 and the Python package versions listed in `requirements.txt`. 
+The optimization requires GLPK as the linear-programming solver, with `glpsol` accessible from the system PATH. No non-standard hardware is required.
+
+A deterministic optimization run typically takes approximately 10 seconds/minutes on a standard desktop computer. 
+The full Monte Carlo uncertainty analysis with 5,000 iterations requires approximately 30 minutes/hours, depending on the region/feedstock scope and hardware.
+
+To use alternative input data, replace the corresponding input workbook(s) in `data/model_inputs/FL/` or `data/model_inputs/FLB/`, while retaining the same workbook structure, worksheet names, variable names and units as the supplied input templates.
+
 ## Installation
 
 Python 3.11 was used for the revised analysis. Install the Python dependencies:
